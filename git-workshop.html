@@ -91,51 +91,22 @@ Private commits vs public commits
 				<script src="./react-dom.development.js"></script>
 				<script src="./babel.js"></script>
 				<script src="./showdown.min.js"></script>
-				<link
-						href="https://fonts.googleapis.com/css?family=Noto+Serif+TC|Roboto+Mono"
-						rel="stylesheet"
-				/>
+				<link href="https://fonts.googleapis.com/css?family=Noto+Serif+TC|Roboto+Mono" rel="stylesheet" />
 				<style type="text/css">
-						html,
-						body {
-								height: 100%;
-								width: 100%;
-								margin: 0px;
-								padding: 0px;
-						}
-						slides {
-							display: none
-						}
-						#root {
-								height: 100%;
-								width: 100%;
-								margin: 0;
+						body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {
+							margin:0;
+							padding:0;
 						}
 
-						.main {
+						html, body, #root, .main, .slide {
 								height: 100%;
 								width: 100%;
-								margin: 0;
-								font-size: 2rem;
-								color: black;
 								background-color: white;
-								font-family: 'Noto Serif TC', serif;
 						}
 
-						p, img, div, blockquote {
-								display: flex;
-								flex-direction: column;
-								align-items: center;
-								justify-content: center;
-								margin: 2rem;
-						}
-
-						.logo {
-								position: absolute;
-								right: 0;
-								bottom: 0;
-								height: 8rem;
-								margin: 1rem;
+						body {
+								font-size: 2rem;
+								font-family: "Noto Serif TC", "Palatino Linotype", "Book Antiqua", Palatino, serif;
 						}
 
 						h1 {
@@ -146,10 +117,29 @@ Private commits vs public commits
 								font-size: 3rem;
 						}
 						
+						.slide {
+								display: flex;
+								flex-direction: column;
+								align-items: center;
+								justify-content: space-evenly;
+						}
+
+						slides {
+							display: none
+						}
+
+						.logo {
+								position: absolute;
+								right: 0;
+								bottom: 0;
+								height: 4rem;
+								margin: 1rem;
+						}
+
 						pre, code {
 								color: green;
 								padding: 1rem;
-								font-family: 'Roboto Mono', monospace;
+								font-family: "Roboto Mono", "Lucida Console", Monaco, monospace;
 								border: 5px dashed green;
 						}
 
