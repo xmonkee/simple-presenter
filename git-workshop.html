@@ -87,9 +87,6 @@ Private commits vs public commits
 				<meta name="robots" content="noindex, nofollow" />
 				<meta name="googlebot" content="noindex, nofollow" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<script src="./react.development.js"></script>
-				<script src="./react-dom.development.js"></script>
-				<script src="./babel.js"></script>
 				<script src="./showdown.min.js"></script>
 				<link href="https://fonts.googleapis.com/css?family=Noto+Serif+TC|Roboto+Mono" rel="stylesheet" />
 				<style type="text/css">
@@ -98,7 +95,7 @@ Private commits vs public commits
 							padding:0;
 						}
 
-						html, body, #root, .main, .slide {
+						html, body, #root, #slide {
 								height: 100%;
 								width: 100%;
 								background-color: white;
@@ -117,7 +114,7 @@ Private commits vs public commits
 								font-size: 3rem;
 						}
 						
-						.slide {
+						#slide {
 								display: flex;
 								flex-direction: column;
 								align-items: center;
@@ -154,19 +151,15 @@ Private commits vs public commits
 
 				</style>
 
-				<script
-						type="text/jsx"
-						data-presets="es2017,react,stage-0"
-						data-plugins="transform-decorators-legacy"
-				>
-
-						class Presenter extends React.Component {
-							constructor(props) {
-								super(props);
+				<script type="application/javascript" >
+						class Presenter {
+							constructor(root) {
 								this.state = {page: 0};
+								this.root = root;
+								this.root.onkeydown = (ev => this.handleKeyPress(ev));
 								const content = document.getElementsByTagName('slides')[0];
 								this.slides = content.innerText.split('\n--\n')
-								this.mainDiv = React.createRef();
+								this.converter = new showdown.Converter();
 							}
 
 							toggleFullScreen(element) {
@@ -200,8 +193,16 @@ Private commits vs public commits
 								}
 							}
 
+							setState(obj) {
+								for (var key in obj) {
+									this.state[key] = obj[key]
+								}
+								this.render()
+							}
+
 
 							handleKeyPress(e) {
+								console.log(e.key)
 								switch (e.key) {
 									case "ArrowRight":
 										this.setState({
@@ -212,38 +213,31 @@ Private commits vs public commits
 										this.setState({ page: Math.max(0, this.state.page - 1) });
 										return;
 									case "f":
-										this.toggleFullScreen(this.mainDiv.current);
+										this.toggleFullScreen(this.root);
 								}
 							}
 
+							makeSlideHtml(slide) {
+								const html = this.converter.makeHtml(slide);
+								return `<div id="slide">${html}</div>`;
+							}
+
 							render() {
-								return (
-									<div
-										className="main"
-										tabIndex={0}
-										onKeyDown={this.handleKeyPress.bind(this)}
-										ref={this.mainDiv}
-									>
-										<img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" className="logo" />
-										<Slide slide={this.slides[this.state.page]} />
-									</div>
-								);
+								this.root.innerHTML = this.makeSlideHtml(this.slides[this.state.page])
 							}
 						}
-
-						const converter = new showdown.Converter();
-
-						function Slide(props) {
-							const html = converter.makeHtml(props.slide);
-							return <div className="slide" dangerouslySetInnerHTML={{ __html: html }} />;
-						}
-
-
-						ReactDOM.render(<Presenter />, document.querySelector("#root"))
+				
+				function run() {
+					const root = document.getElementById("root")
+					const presenter = new Presenter(root);
+					root.focus()
+					presenter.render()
+				}
 				</script>
 		</head>
 
-		<body>
-				<div id="root"></div>
+		<body onload="run()">
+				<div id="root" tabindex="0"></div>
 		</body>
+
 </html>
