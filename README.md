@@ -2,6 +2,7 @@
 ## A dead simple way to make presentations
 
 [Live demo](https://xmonkee.github.io/simple-presenter/simple-presenter.html)
+
 [Larger example](https://xmonkee.github.io/simple-presenter/examples/git-workflows.html)
 
 - Download simple-presenter.html
