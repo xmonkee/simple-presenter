@@ -1,0 +1,42 @@
+<slides>
+![](https://dummyimage.com/600x400/ff7316/5816ff.png&text=Simple+Presenter)
+--
+## Make slides in `markdown` or `html`
+--
+## Dead simple
+1. Download this file
+2. Edit the content in the  tag on the top of the file
+3. Open file in browser
+4. Impress everyone
+--
+## Easy navigation
+- `f` for fullscreen
+- Arrow keys to move back and forth
+--
+## Code looks like `this`
+	# code blocks 
+	# looks like this
+--
+## Customizable 
+1. Edit the css to make it look like you want
+2. Define a custom function to convert content to `html`
+</slides>
+
+<html>
+		<head>
+				<title>Simple Presenter</title>
+				<link rel="stylesheet" href="./simple-presenter.css">
+				<script type="application/javascript" src="./simple-presenter.js"></script>
+
+				<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+				<script type="application/javascript">
+					const mdConverter = new showdown.Converter()
+					SimplePresenter.registerMakeHTMLFunction(slideContent => mdConverter.makeHtml(slideContent))
+				</script>
+
+		</head>
+		<body onload="SimplePresenter.run()">
+				<div id="simple-presenter-root" tabindex="0"></div>
+		</body>
+
+</html>
