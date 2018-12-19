@@ -1,0 +1,103 @@
+<slides>
+# ![](https://git-scm.com/images/logos/downloads/Git-Logo-2Color.png)
+--
+# The basics
+--
+## What is a `commit`?
+--
+## `git add . && git commit`
+
+![https://i.stack.imgur.com/naws3.png](https://i.stack.imgur.com/naws3.png =500x300)
+--
+## What is a `branch`?
+
+![https://buddy.works/blog/images/feature-branch.png](https://buddy.works/blog/images/feature-branch.png)
+--
+## What is `origin`?
+--
+## `fetch` vs `pull`
+--
+# Working with branches
+--
+## `checkout` vs `reset`
+--
+## `merge` vs `rebase`
+--
+## `merge` vs `merge --squash`
+--
+## How do I deal with conflicts?
+	git fetch
+	git merge origin/master
+	git status
+	vim blah
+	git add blah
+	git commit -m "Merge master"
+	git checkout master
+	git merge MyBranch --squash`
+--
+# Practices
+--
+## What is a reasonable commit? 
+1. Standalone
+2. Testable
+2. Explainable
+3. Not too big
+--
+## How often should commit? 
+Private commits vs public commits
+--
+## Good commit messages
+1. Separate subject from body with a blank line
+2. Limit the subject line to 50 characters
+3. Capitalize the subject line
+4. Do not end the subject line with a period
+5. Use the imperative mood in the subject line
+6. Use the body to explain what and why vs. how
+
+#### credit: [César H. Vortmann](https://hackernoon.com/what-makes-a-good-commit-message-995d23687ad)
+--
+	Make Source.indexOf(ByteString) significantly faster
+	
+	Previously the algorithm that did this was extremely inefficient, and 
+	had worst case runtime of O(N * S * S) for N is size of the bytestring 
+	and S is the number of segments.
+
+	The new code runs in O(N * S). It accomplishes this by not starting 
+	each search at the first segment, which could occur many times when 
+	called by RealBufferedSource.
+--
+# Optional topics
+--
+## Selective staging 
+
+`add -p`
+--
+## Changing history 
+
+`commit --amend`
+--
+## *Really* Changing history 
+
+`rebase -i`
+--
+# Questions?
+</slides>
+
+<html>
+		<head>
+				<title>Simple Presenter</title>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xmonkee/simple-presenter/simple-presenter.css">
+				<script type="application/javascript" src="https://cdn.jsdelivr.net/gh/xmonkee/simple-presenter/simple-presenter.js"></script>
+				<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+				<script type="application/javascript">
+					const mdConverter = new showdown.Converter()
+					SimplePresenter.registerMakeHTMLFunction(slideContent => mdConverter.makeHtml(slideContent))
+				</script>
+
+		</head>
+		<body onload="SimplePresenter.run()">
+				<div id="simple-presenter-root" tabindex="0"></div>
+		</body>
+
+</html>
+
