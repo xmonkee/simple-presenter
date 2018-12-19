@@ -46,16 +46,6 @@
 								font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 						}
 
-						h1 {
-								font-size: 5rem;
-						}
-
-						h2 {
-								font-size: 3rem;
-						}
-                        h4 {
-                                font-size: 1rem;
-                        }
 						#slide {
 								display: flex;
 								flex-direction: column;
@@ -75,9 +65,14 @@
 								margin: 1rem;
 						}
 
+						li * {
+							display: inline-block;
+						}
+
 						pre, code {
 								color: green;
-								padding: 1rem;
+								padding-left: 1rem;
+								padding-right: 1rem;
 								font-family: "Lucida Console", Monaco, monospace;
 								border: 5px dashed green;
 						}
