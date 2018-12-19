@@ -6,8 +6,7 @@ class SimplePresenter {
         this.root = root;
         this.root.onkeydown = (ev => this.handleKeyPress(ev));
         const content = document.getElementsByTagName('slides')[0];
-        this.slides = content.innerHTML.split('\n--\n')
-        this.converter = new showdown.Converter();
+        this.slides = content.innerText.split('\n--\n')
     }
 
     toggleFullScreen(element) {
