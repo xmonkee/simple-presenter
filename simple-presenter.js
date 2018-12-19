@@ -6,7 +6,17 @@ class SimplePresenter {
         this.root = root;
         this.root.onkeydown = (ev => this.handleKeyPress(ev));
         const content = document.getElementsByTagName('slides')[0];
-        this.slides = content.innerText.split('\n--\n')
+        const decoded = this.unescapeHTML(content.innerHTML)
+        this.slides = decoded.split('\n--\n')
+    }
+
+    unescapeHTML(html) {
+        // Without this, the contents of the slides get escaped. 
+        // i.e. an `&` character will get returned as `&amp;`
+        // This breaks showdown. The `&amp` gets converted to `&amp;amp`
+        const elem = document.createElement('textarea');
+        elem.innerHTML = html
+        return elem.value;
     }
 
     toggleFullScreen(element) {
