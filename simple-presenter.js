@@ -4,7 +4,7 @@ class SimplePresenter {
     constructor(root) {
         this.root = root;
         this.root.onkeydown = ev => this.handleKeyPress(ev);
-        this.root.onclick = ev => this.handleClick(ev);
+        this.root.onmousedown = ev => this.handleClick(ev);
         const content = document.getElementsByTagName('slides')[0];
         const decoded = this.unescapeHTML(content.innerHTML);
         this.slides = decoded.split('\n--\n');
