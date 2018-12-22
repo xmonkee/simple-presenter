@@ -4,6 +4,7 @@ class SimplePresenter {
     constructor(root) {
         this.root = root;
         this.root.onkeydown = ev => this.handleKeyPress(ev);
+        this.root.onclick = ev => this.handleClick(ev);
         const content = document.getElementsByTagName('slides')[0];
         const decoded = this.unescapeHTML(content.innerHTML);
         this.slides = decoded.split('\n--\n');
@@ -93,6 +94,14 @@ class SimplePresenter {
                 return;
             case 'f':
                 this.toggleFullScreen(this.root);
+        }
+    }
+
+    handleClick(ev) {
+        if (ev.offsetX > this.root.offsetWidth / 3) {
+            this.nextPage();
+        } else {
+            this.prevPage();
         }
     }
 
