@@ -98,7 +98,7 @@ class SimplePresenter {
     }
 
     handleClick(ev) {
-        if (ev.offsetX > this.root.offsetWidth / 3) {
+        if (ev.pageX > this.root.offsetWidth / 3) {
             this.nextPage();
         } else {
             this.prevPage();
