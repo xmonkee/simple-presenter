@@ -1,26 +1,25 @@
-var simplePresenterMakeHTMLFunction = (slideContent) => slideContent;
+var simplePresenterMakeHTMLFunction = slideContent => slideContent;
 
 class SimplePresenter {
     constructor(root) {
-        this.state = {page: 0};
         this.root = root;
-        this.root.onkeydown = (ev => this.handleKeyPress(ev));
+        this.root.onkeydown = ev => this.handleKeyPress(ev);
         const content = document.getElementsByTagName('slides')[0];
-        const decoded = this.unescapeHTML(content.innerHTML)
-        this.slides = decoded.split('\n--\n')
+        const decoded = this.unescapeHTML(content.innerHTML);
+        this.slides = decoded.split('\n--\n');
+        this.initState();
     }
 
     unescapeHTML(html) {
-        // Without this, the contents of the slides get escaped. 
+        // Without this, the contents of the slides get escaped.
         // i.e. an `&` character will get returned as `&amp;`
         // This breaks showdown. The `&amp` gets converted to `&amp;amp`
         const elem = document.createElement('textarea');
-        elem.innerHTML = html
+        elem.innerHTML = html;
         return elem.value;
     }
 
     toggleFullScreen(element) {
-
         if (
             !document.fullscreenElement &&
             !document.mozFullScreenElement &&
@@ -50,36 +49,60 @@ class SimplePresenter {
         }
     }
 
-    setState(obj) {
-        for (var key in obj) {
-            this.state[key] = obj[key]
-        }
-        this.render()
+    initState() {
+        const pageNumber = window.location.href.split('#')[1] || '0';
+        this.state = {page: parseInt(pageNumber)};
+        window.history.replaceState(this.state, '', `#${this.state.page}`);
+        window.onpopstate = ev => {
+            this.state = ev.state;
+            this.render();
+        };
     }
 
+    setState(state) {
+        for (const key in state) {
+            this.state[key] = state[key];
+        }
+        window.history.pushState(this.state, '', `#${this.state.page}`);
+        this.render();
+    }
+
+    nextPage() {
+        if (this.state.page < this.slides.length - 1) {
+            this.setState({
+                page: this.state.page + 1,
+            });
+        }
+    }
+
+    prevPage() {
+        if (this.state.page > 0) {
+            this.setState({
+                page: this.state.page - 1,
+            });
+        }
+    }
 
     handleKeyPress(e) {
         switch (e.key) {
-            case "ArrowRight":
-                this.setState({
-                    page: Math.min(this.slides.length - 1, this.state.page + 1),
-                });
+            case 'ArrowRight':
+                this.nextPage();
                 return;
-            case "ArrowLeft":
-                this.setState({ page: Math.max(0, this.state.page - 1) });
+            case 'ArrowLeft':
+                this.prevPage();
                 return;
-            case "f":
+            case 'f':
                 this.toggleFullScreen(this.root);
         }
     }
 
     makeSlideHtml(slideContent) {
-        const html = simplePresenterMakeHTMLFunction(slideContent)
+        const html = simplePresenterMakeHTMLFunction(slideContent);
         return `<div id="slide">${html}</div>`;
     }
 
     render() {
-        this.root.innerHTML = this.makeSlideHtml(this.slides[this.state.page])
+        this.root.innerHTML = this.makeSlideHtml(this.slides[this.state.page]);
     }
 
     static registerMakeHTMLFunction(fn) {
@@ -87,9 +110,9 @@ class SimplePresenter {
     }
 
     static run() {
-        const root = document.getElementById("simple-presenter-root")
+        const root = document.getElementById('simple-presenter-root');
         const presenter = new SimplePresenter(root);
-        root.focus()
-        presenter.render()
+        root.focus();
+        presenter.render();
     }
 }
