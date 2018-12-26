@@ -1,9 +1,10 @@
 var simplePresenterMakeHTMLFunction = slideContent => slideContent;
 
 class SimplePresenter {
-    constructor(root, slides) {
+    constructor(root, slides, slideToHTML) {
         this.root = root;
         this.slides = slides;
+        this.slideToHTML = slideToHTML || (x => x);
         this.root.addEventListener('keydown', ev => this.handleKeyPress(ev));
         this.root.addEventListener('click', ev => this.handleClick(ev));
         this.root.addEventListener('touchstart', ev => this.swipeStart(ev));
@@ -118,17 +119,16 @@ class SimplePresenter {
         this.touchDownX = null;
     }
 
-    makeSlideHtml(slide) {
-        return `<div id="slide">${slide}</div>`;
-    }
-
     render() {
-        this.root.innerHTML = this.makeSlideHtml(this.slides[this.state.page]);
+        const slideHTML = this.slideToHTML(this.slides[this.state.page]);
+        Promise.resolve(slideHTML).then(slideHTML => {
+            this.root.innerHTML = `<div id="slide">${slideHTML}</div>`;
+        });
     }
 
-    static run(slides) {
+    static run(slides, slideToHTML) {
         const root = document.getElementById('simple-presenter-root');
-        const presenter = new SimplePresenter(root, slides);
+        const presenter = new SimplePresenter(root, slides, slideToHTML);
         root.focus();
         presenter.render();
     }

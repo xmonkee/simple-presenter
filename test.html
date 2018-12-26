@@ -40,10 +40,8 @@
                 const mdConverter = new showdown.Converter();
                 const content = document.getElementsByTagName('slides')[0];
                 const decoded = this.unescapeHTML(content.innerHTML);
-                const slides = decoded
-                    .split('\n--\n')
-                    .map(page => mdConverter.makeHtml(page));
-                SimplePresenter.run(slides);
+                const slides = decoded.split('\n--\n');
+                SimplePresenter.run(slides, slide => mdConverter.makeHtml(slide));
             }
         </script>
     </head>
