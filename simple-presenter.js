@@ -1,23 +1,15 @@
 var simplePresenterMakeHTMLFunction = slideContent => slideContent;
 
 class SimplePresenter {
-    constructor(root) {
+    constructor(root, slides) {
         this.root = root;
-        this.root.onkeydown = ev => this.handleKeyPress(ev);
-        this.root.onmousedown = ev => this.handleClick(ev);
-        const content = document.getElementsByTagName('slides')[0];
-        const decoded = this.unescapeHTML(content.innerHTML);
-        this.slides = decoded.split('\n--\n');
+        this.slides = slides;
+        this.root.addEventListener('keydown', ev => this.handleKeyPress(ev));
+        this.root.addEventListener('click', ev => this.handleClick(ev));
+        this.root.addEventListener('touchstart', ev => this.swipeStart(ev));
+        this.root.addEventListener('touchmove', ev => ev.preventDefault());
+        this.root.addEventListener('touchend', ev => this.swipeEnd(ev));
         this.initState();
-    }
-
-    unescapeHTML(html) {
-        // Without this, the contents of the slides get escaped.
-        // i.e. an `&` character will get returned as `&amp;`
-        // This breaks showdown. The `&amp` gets converted to `&amp;amp`
-        const elem = document.createElement('textarea');
-        elem.innerHTML = html;
-        return elem.value;
     }
 
     toggleFullScreen(element) {
@@ -98,29 +90,45 @@ class SimplePresenter {
     }
 
     handleClick(ev) {
-        if (ev.pageX > this.root.offsetWidth / 3) {
+        if (ev.pageX > (4 * window.innerWidth) / 5) {
             this.nextPage();
-        } else {
+        } else if (ev.pageX < window.innerWidth / 5) {
             this.prevPage();
         }
     }
 
-    makeSlideHtml(slideContent) {
-        const html = simplePresenterMakeHTMLFunction(slideContent);
-        return `<div id="slide">${html}</div>`;
+    swipeStart(ev) {
+        this.touchDown = ev.touches[0];
+    }
+
+    swipeEnd(ev) {
+        if (!this.touchDown) {
+            return;
+        }
+        const touchUp = ev.changedTouches[0];
+        const travelX = touchUp.pageX - this.touchDown.pageX;
+        const travelY = touchUp.pageY - this.touchDown.pageY;
+        const primaryTravel =
+            Math.abs(travelX) > Math.abs(travelY) ? travelX : travelY;
+        if (primaryTravel > 0) {
+            prevPage();
+        } else {
+            nextPage();
+        }
+        this.touchDownX = null;
+    }
+
+    makeSlideHtml(slide) {
+        return `<div id="slide">${slide}</div>`;
     }
 
     render() {
         this.root.innerHTML = this.makeSlideHtml(this.slides[this.state.page]);
     }
 
-    static registerMakeHTMLFunction(fn) {
-        simplePresenterMakeHTMLFunction = fn;
-    }
-
-    static run() {
+    static run(slides) {
         const root = document.getElementById('simple-presenter-root');
-        const presenter = new SimplePresenter(root);
+        const presenter = new SimplePresenter(root, slides);
         root.focus();
         presenter.render();
     }

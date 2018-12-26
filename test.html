@@ -15,19 +15,40 @@
 </slides>
 
 <html>
-		<head>
-				<title>Simple Presenter</title>
-				<link rel="stylesheet" href="./simple-presenter.css">
-				<script type="application/javascript" src="./simple-presenter.js"></script>
-				<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
-				<script type="application/javascript">
-					const mdConverter = new showdown.Converter()
-					SimplePresenter.registerMakeHTMLFunction(slideContent => mdConverter.makeHtml(slideContent))
-				</script>
+    <head>
+        <title>Simple Presenter</title>
+        <link rel="stylesheet" href="./simple-presenter.css" />
+        <script
+            type="application/javascript"
+            src="./simple-presenter.js"
+        ></script>
+        <script
+            type="application/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"
+        ></script>
+        <script type="application/javascript">
+            function unescapeHTML(html) {
+                // Without this, the contents of the slides get escaped.
+                // i.e. an `&` character will get returned as `&amp;`
+                // This breaks showdown. The `&amp` gets converted to `&amp;amp`
+                const elem = document.createElement('textarea');
+                elem.innerHTML = html;
+                return elem.value;
+            }
 
-		</head>
-		<body onload="SimplePresenter.run()">
-				<div id="simple-presenter-root" tabindex="0"></div>
-		</body>
+            function startPresentation() {
+                const mdConverter = new showdown.Converter();
+                const content = document.getElementsByTagName('slides')[0];
+                const decoded = this.unescapeHTML(content.innerHTML);
+                const slides = decoded
+                    .split('\n--\n')
+                    .map(page => mdConverter.makeHtml(page));
+                SimplePresenter.run(slides);
+            }
+        </script>
+    </head>
 
+    <body onload="startPresentation()">
+        <div id="simple-presenter-root" tabindex="0"></div>
+    </body>
 </html>
